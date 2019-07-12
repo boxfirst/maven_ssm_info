@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.daisy.mapper.InForMapper">
+    <resultMap id="BaseResultMap" type="com.daisy.entity.InFor">
+        <id column="inforid" jdbcType="BIGINT" property="inforid"/>
+        <result column="infornumber" jdbcType="VARCHAR" property="infornumber"/>
+        <result column="inforname" jdbcType="VARCHAR" property="inforname"/>
+        <result column="sex" jdbcType="CHAR" property="sex"/>
+        <result column="inforage" jdbcType="INTEGER" property="inforage"/>
+        <result column="inforpassword" jdbcType="VARCHAR" property="inforpassword"/>
+        <result column="inforphone" jdbcType="VARCHAR" property="inforphone"/>
+        <result column="jobid" jdbcType="INTEGER" property="jobid"/>
+        <result column="registdate" jdbcType="TIMESTAMP" property="registdate"/>
+    </resultMap>
+
+    <resultMap id="BaseResultMapWithJob" type="com.daisy.entity.InFor">
+        <id column="inforid" jdbcType="BIGINT" property="inforid"/>
+        <result column="infornumber" jdbcType="VARCHAR" property="infornumber"/>
+        <result column="inforname" jdbcType="VARCHAR" property="inforname"/>
+        <result column="sex" jdbcType="CHAR" property="sex"/>
+        <result column="inforage" jdbcType="INTEGER" property="inforage"/>
+        <result column="inforpassword" jdbcType="VARCHAR" property="inforpassword"/>
+        <result column="inforphone" jdbcType="VARCHAR" property="inforphone"/>
+        <result column="jobid" jdbcType="INTEGER" property="jobid"/>
+        <result column="registdate" jdbcType="TIMESTAMP" property="registdate"/>
+        <association property="job" javaType="com.daisy.entity.Job">
+            <id column="jobid" property="jobid"/>
+            <result column="jobname" property="jobname"/>
+        </association>
+
+    </resultMap>
+
+    <sql id="Example_Where_Clause">
+        <where>
+            <foreach collection="oredCriteria" item="criteria" separator="or">
+                <if test="criteria.valid">
+                    <trim prefix="(" prefixOverrides="and" suffix=")">
+                        <foreach collection="criteria.criteria" item="criterion">
+                            <choose>
+                                <when test="criterion.noValue">
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue">
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue">
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue">
+                                    and ${criterion.condition}
+                                    <foreach close=")" collection="criterion.value" item="listItem" open="("
+                                             separator=",">
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+    <sql id="Update_By_Example_Where_Clause">
+        <where>
+            <foreach collection="example.oredCriteria" item="criteria" separator="or">
+                <if test="criteria.valid">
+                    <trim prefix="(" prefixOverrides="and" suffix=")">
+                        <foreach collection="criteria.criteria" item="criterion">
+                            <choose>
+                                <when test="criterion.noValue">
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue">
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue">
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue">
+                                    and ${criterion.condition}
+                                    <foreach close=")" collection="criterion.value" item="listItem" open="("
+                                             separator=",">
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+    <sql id="Base_Column_List">
+    inforid, infornumber, inforname, sex, inforage, inforpassword, inforphone, jobid, 
+    registdate
+  </sql>
+    <sql id="Base_Column_List_With_Job">
+    infor.inforid, infor.infornumber, infor.inforname, infor.sex, infor.inforage,
+    infor.inforpassword, infor.inforphone,
+    infor.registdate,infor.jobid, job.jobname
+  </sql>
+    <select id="selectByExample" parameterType="com.daisy.entity.InForExample" resultMap="BaseResultMap">
+        select
+        <if test="distinct">
+            distinct
+        </if>
+        <include refid="Base_Column_List"/>
+        from infor
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+    </select>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from infor
+        where inforid = #{inforid,jdbcType=BIGINT}
+    </select>
+
+    <select id="selectByExampleWithJob" parameterType="com.daisy.entity.InForExample" resultMap="BaseResultMapWithJob">
+        select
+        <if test="distinct">
+            distinct
+        </if>
+        <include refid="Base_Column_List_With_Job"/>
+        from infor
+        left join job on infor.jobid=job.jobid
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+    </select>
+
+    <select id="selectByPrimaryKeyWithJob" parameterType="long" resultMap="BaseResultMapWithJob">
+        select
+        <include refid="Base_Column_List_With_Job"/>
+        from infor
+        left join job on infor.jobid=job.jobid
+        where inforid = #{inforid,jdbcType=BIGINT}
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from infor
+    where inforid = #{inforid,jdbcType=BIGINT}
+  </delete>
+    <delete id="deleteByExample" parameterType="com.daisy.entity.InForExample">
+        delete from infor
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+    </delete>
+    <insert id="insert" parameterType="com.daisy.entity.InFor">
+    insert into infor (inforid, infornumber, inforname, 
+      sex, inforage, inforpassword, 
+      inforphone, jobid, registdate
+      )
+    values (#{inforid,jdbcType=BIGINT}, #{infornumber,jdbcType=VARCHAR}, #{inforname,jdbcType=VARCHAR}, 
+      #{sex,jdbcType=CHAR}, #{inforage,jdbcType=INTEGER}, #{inforpassword,jdbcType=VARCHAR}, 
+      #{inforphone,jdbcType=VARCHAR}, #{jobid,jdbcType=INTEGER}, #{registdate,jdbcType=TIMESTAMP}
+      )
+  </insert>
+    <insert id="insertSelective" parameterType="com.daisy.entity.InFor">
+        insert into infor
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="inforid != null">
+                inforid,
+            </if>
+            <if test="infornumber != null">
+                infornumber,
+            </if>
+            <if test="inforname != null">
+                inforname,
+            </if>
+            <if test="sex != null">
+                sex,
+            </if>
+            <if test="inforage != null">
+                inforage,
+            </if>
+            <if test="inforpassword != null">
+                inforpassword,
+            </if>
+            <if test="inforphone != null">
+                inforphone,
+            </if>
+            <if test="jobid != null">
+                jobid,
+            </if>
+            <if test="registdate != null">
+                registdate,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="inforid != null">
+                #{inforid,jdbcType=BIGINT},
+            </if>
+            <if test="infornumber != null">
+                #{infornumber,jdbcType=VARCHAR},
+            </if>
+            <if test="inforname != null">
+                #{inforname,jdbcType=VARCHAR},
+            </if>
+            <if test="sex != null">
+                #{sex,jdbcType=CHAR},
+            </if>
+            <if test="inforage != null">
+                #{inforage,jdbcType=INTEGER},
+            </if>
+            <if test="inforpassword != null">
+                #{inforpassword,jdbcType=VARCHAR},
+            </if>
+            <if test="inforphone != null">
+                #{inforphone,jdbcType=VARCHAR},
+            </if>
+            <if test="jobid != null">
+                #{jobid,jdbcType=INTEGER},
+            </if>
+            <if test="registdate != null">
+                #{registdate,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <select id="countByExample" parameterType="com.daisy.entity.InForExample" resultType="java.lang.Long">
+        select count(*) from infor
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+    </select>
+    <update id="updateByExampleSelective" parameterType="map">
+        update infor
+        <set>
+            <if test="record.inforid != null">
+                inforid = #{record.inforid,jdbcType=BIGINT},
+            </if>
+            <if test="record.infornumber != null">
+                infornumber = #{record.infornumber,jdbcType=VARCHAR},
+            </if>
+            <if test="record.inforname != null">
+                inforname = #{record.inforname,jdbcType=VARCHAR},
+            </if>
+            <if test="record.sex != null">
+                sex = #{record.sex,jdbcType=CHAR},
+            </if>
+            <if test="record.inforage != null">
+                inforage = #{record.inforage,jdbcType=INTEGER},
+            </if>
+            <if test="record.inforpassword != null">
+                inforpassword = #{record.inforpassword,jdbcType=VARCHAR},
+            </if>
+            <if test="record.inforphone != null">
+                inforphone = #{record.inforphone,jdbcType=VARCHAR},
+            </if>
+            <if test="record.jobid != null">
+                jobid = #{record.jobid,jdbcType=INTEGER},
+            </if>
+            <if test="record.registdate != null">
+                registdate = #{record.registdate,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        <if test="_parameter != null">
+            <include refid="Update_By_Example_Where_Clause"/>
+        </if>
+    </update>
+    <update id="updateByExample" parameterType="map">
+        update infor
+        set inforid = #{record.inforid,jdbcType=BIGINT},
+        infornumber = #{record.infornumber,jdbcType=VARCHAR},
+        inforname = #{record.inforname,jdbcType=VARCHAR},
+        sex = #{record.sex,jdbcType=CHAR},
+        inforage = #{record.inforage,jdbcType=INTEGER},
+        inforpassword = #{record.inforpassword,jdbcType=VARCHAR},
+        inforphone = #{record.inforphone,jdbcType=VARCHAR},
+        jobid = #{record.jobid,jdbcType=INTEGER},
+        registdate = #{record.registdate,jdbcType=TIMESTAMP}
+        <if test="_parameter != null">
+            <include refid="Update_By_Example_Where_Clause"/>
+        </if>
+    </update>
+    <update id="updateByPrimaryKeySelective" parameterType="com.daisy.entity.InFor">
+        update infor
+        <set>
+            <if test="infornumber != null">
+                infornumber = #{infornumber,jdbcType=VARCHAR},
+            </if>
+            <if test="inforname != null">
+                inforname = #{inforname,jdbcType=VARCHAR},
+            </if>
+            <if test="sex != null">
+                sex = #{sex,jdbcType=CHAR},
+            </if>
+            <if test="inforage != null">
+                inforage = #{inforage,jdbcType=INTEGER},
+            </if>
+            <if test="inforpassword != null">
+                inforpassword = #{inforpassword,jdbcType=VARCHAR},
+            </if>
+            <if test="inforphone != null">
+                inforphone = #{inforphone,jdbcType=VARCHAR},
+            </if>
+            <if test="jobid != null">
+                jobid = #{jobid,jdbcType=INTEGER},
+            </if>
+            <if test="registdate != null">
+                registdate = #{registdate,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where inforid = #{inforid,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.daisy.entity.InFor">
+    update infor
+    set infornumber = #{infornumber,jdbcType=VARCHAR},
+      inforname = #{inforname,jdbcType=VARCHAR},
+      sex = #{sex,jdbcType=CHAR},
+      inforage = #{inforage,jdbcType=INTEGER},
+      inforpassword = #{inforpassword,jdbcType=VARCHAR},
+      inforphone = #{inforphone,jdbcType=VARCHAR},
+      jobid = #{jobid,jdbcType=INTEGER},
+      registdate = #{registdate,jdbcType=TIMESTAMP}
+    where inforid = #{inforid,jdbcType=BIGINT}
+  </update>
+</mapper>
